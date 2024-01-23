@@ -1,6 +1,6 @@
 # Tamper Proof Data
 
-`SecureConnection`: A simple HMAC wrapper to send and receive validated messages between server and client.
+`SecureConnection`: A simple, zero dependency HMAC wrapper for the native browser crypto module to send and receive validated messages between server and client.
 
 - `establish():Promise<SecureConnection>`
 	- Establishes a secure '*connection*' between the client and server. 
