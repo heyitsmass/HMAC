@@ -1,30 +1,26 @@
-# React + TypeScript + Vite
+# Tamper Proof Data
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+`SecureConnection`: A simple HMAC wrapper to send and receive validated messages between server and client.
 
-Currently, two official plugins are available:
+- `establish():Promise<SecureConnection>`
+	- Establishes a secure '*connection*' between the client and server. 
+	- For a connection to be secure the client must have 
+		- An HMAC key present in `localStorage` (auto-generated).
+		- Initial data.
+		- Signature to reference data against.
+		
+-  `get<T,>() => Promise<T>` 
+	- Provides `GET` functionality from the server.
+	- Messages are signed by the client and transmitted to the server.
+	- The response must contain the signature sent by the client, re-validated on return.
+  
+-  `send<T,>(data:T) => Promise<T>`
+	-  Provides `POST` functionality to the server from the client.
+	- Messages are signed by the client, data is saved into the `localStorage`.
+	- Upon saving the data, the get process is repeated to validate and update the data.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+-  `verify() => Promise<boolean>` 
+	- Provides verification functionality of the client data.
+	- Known data and signature is collected from the client.
+	- Data is requested from the server and validated against the client's known data.
+	- If the data is *invalid*, the user is prompted to restore the data from the preexisting client data.
